@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Patient dashboard for Rukmini Hospital.">
+    <title>Patient Dashboard | Rukmini Hospital</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body class="dashboard-page">
+    <header class="site-header">
+        <nav class="navbar container" aria-label="Main navigation">
+            <a class="brand" href="home.html" aria-label="Rukmini Hospital home">
+                <span class="brand-mark" aria-hidden="true">R+</span>
+                <span>Rukmini <strong>Hospital</strong><small>DIABETES CARE & WELLNESS</small></span>
+            </a>
+            <div class="dashboard-nav-actions">
+                <a class="button button-small button-outline" href="home.html">← Back to website</a>
+                <button class="button button-small button-outline" id="dashboard-logout" type="button">Sign out</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="dashboard-main container">
+        <section class="dashboard-heading">
+            <span class="eyebrow">PATIENT MANAGEMENT</span>
+            <h1>Patient <span>dashboard.</span></h1>
+            <p>Add patient details, then use the WhatsApp button to open a prefilled reminder. Review and send it in WhatsApp.</p>
+        </section>
+
+        <aside class="dashboard-warning" role="note">
+            <strong>Do not enter real patient information.</strong>
+            <span>This browser-only sign-in is not secure authentication. Records are saved in this browser only. Do not use this dashboard as a medical-record system.</span>
+        </aside>
+
+        <section class="dashboard-card" aria-labelledby="add-patient-heading">
+            <div class="dashboard-card-heading">
+                <div>
+                    <span class="eyebrow">NEW RECORD</span>
+                    <h2 id="add-patient-heading">Add patient</h2>
+                </div>
+            </div>
+            <form id="patient-form" class="patient-form">
+                <div class="patient-form-grid">
+                    <div class="patient-field">
+                        <label for="patient-name">Patient name *</label>
+                        <input id="patient-name" name="name" type="text" maxlength="100" autocomplete="name" placeholder="Enter patient name" required>
+                    </div>
+                    <div class="patient-field">
+                        <label for="patient-mobile">WhatsApp mobile number *</label>
+                        <input id="patient-mobile" name="mobile" type="tel" inputmode="tel" maxlength="20" placeholder="+91 98765 43210" aria-describedby="mobile-hint" required>
+                        <small id="mobile-hint">Include country code, for example +91 for India.</small>
+                    </div>
+                    <div class="patient-field patient-field-wide">
+                        <label for="patient-disease">Disease type *</label>
+                        <select id="patient-disease" name="disease" required>
+                            <option value="">Select a diabetes-care category</option>
+                            <option value="Type 1 diabetes">Type 1 diabetes</option>
+                            <option value="Type 2 diabetes">Type 2 diabetes</option>
+                            <option value="Gestational diabetes">Gestational diabetes</option>
+                            <option value="Prediabetes">Prediabetes</option>
+                            <option value="Other diabetes type">Other diabetes type</option>
+                            <option value="Not specified">Not specified</option>
+                        </select>
+                        <small>Select the category already provided by the patient or their care team; this is not a diagnosis tool.</small>
+                    </div>
+                    <label class="patient-consent patient-field-wide">
+                        <input id="patient-whatsapp-consent" name="whatsappConsent" type="checkbox" required>
+                        <span>I confirm the patient agreed to receive appointment reminders on WhatsApp. *</span>
+                    </label>
+                </div>
+                <button class="button button-primary patient-submit" type="submit">Add patient <span aria-hidden="true">+</span></button>
+                <p class="patient-status" id="patient-status" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+
+        <section class="dashboard-card patients-card" aria-labelledby="all-patients-heading">
+            <div class="dashboard-card-heading patients-heading">
+                <div>
+                    <span class="eyebrow">PATIENT LIST</span>
+                    <h2 id="all-patients-heading">All patients</h2>
+                </div>
+                <div class="patient-list-actions">
+                    <span class="patient-count" id="patient-count">0 patients</span>
+                    <button class="button button-outline button-small" id="download-patient-report" type="button">Download patient report for Excel</button>
+                </div>
+            </div>
+            <div class="patient-list" id="patient-list" aria-live="polite"></div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-bottom">
+            <span>© <span id="current-year"></span> Rukmini Hospital. Patient dashboard.</span>
+            <a href="home.html">Return to website</a>
+        </div>
+    </footer>
+</body>
+</html>

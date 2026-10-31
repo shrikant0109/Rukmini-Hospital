@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sign in to Rukmini Hospital.">
+    <title>Login | Rukmini Hospital</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body class="login-page">
+    <main class="login-layout">
+        <section class="login-welcome">
+            <a class="brand login-brand" href="home.html">
+                <span class="brand-mark" aria-hidden="true">R+</span>
+                <span>Rukmini <strong>Hospital</strong><small>DIABETES CARE & WELLNESS</small></span>
+            </a>
+            <div class="login-welcome-copy">
+                <span class="eyebrow">WELCOME BACK</span>
+                <h1>Welcome back.<br><span>We’re here for you.</span></h1>
+                <p>Sign in with your email and password to continue.</p>
+            </div>
+            <div class="login-quote"><span aria-hidden="true">“</span><p>Good care starts with feeling heard.</p></div>
+            <a class="login-home-link" href="home.html">← Back to Rukmini Hospital</a>
+        </section>
+        <section class="login-panel">
+            <div class="login-card">
+                <span class="login-icon" aria-hidden="true">♡</span>
+                <span class="eyebrow">ACCOUNT ACCESS</span>
+                <h2>Log in to your account</h2>
+                <p class="login-intro">Enter your email and password to continue. This browser-only sign-in does not verify an account and is not secure authentication.</p>
+                <form id="login-form">
+                    <label for="login-email">Email address</label>
+                    <input id="login-email" name="email" type="email" placeholder="you@example.com" autocomplete="username" required>
+                    <label for="login-password">Password</label>
+                    <input id="login-password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+                    <button class="button button-primary login-submit" type="submit">Log in <span aria-hidden="true">→</span></button>
+                    <p class="login-status" id="login-status" role="status" aria-live="polite"></p>
+                </form>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
