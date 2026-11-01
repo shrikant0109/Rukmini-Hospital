@@ -260,7 +260,20 @@ if (patientForm && hasDashboardSession) {
     const patientStatus = document.querySelector("#patient-status");
     const reportButton = document.querySelector("#download-patient-report");
     const patientStorageKey = "rukmini-demo-patients";
+    const samplePatients = [
+        { name: "Asha Demo", mobile: "+91 00000 00001", age: 24, disease: "Type 1 diabetes", analysisNote: "Example profile for testing patient-list display." },
+        { name: "Rohan Sample", mobile: "+91 00000 00002", age: 38, disease: "Type 2 diabetes", analysisNote: "Example profile for testing category filtering." },
+        { name: "Mira Example", mobile: "+91 00000 00003", age: 31, disease: "Gestational diabetes", analysisNote: "Example profile for testing varied age values." },
+        { name: "Kabir Demo", mobile: "+91 00000 00004", age: 46, disease: "Prediabetes", analysisNote: "Example profile for testing report exports." },
+        { name: "Tara Sample", mobile: "+91 00000 00005", age: 52, disease: "Other diabetes type", analysisNote: "Example profile with an alternate category." },
+        { name: "Neel Example", mobile: "+91 00000 00006", age: 63, disease: "Not specified", analysisNote: "Example profile with an unspecified category." },
+        { name: "Isha Demo", mobile: "+91 00000 00007", age: 29, disease: "Type 2 diabetes", analysisNote: "Example profile for testing repeated categories." },
+        { name: "Dev Sample", mobile: "+91 00000 00008", age: 41, disease: "Type 1 diabetes", analysisNote: "Example profile for testing patient-row layout." },
+        { name: "Nina Example", mobile: "+91 00000 00009", age: 57, disease: "Prediabetes", analysisNote: "Example profile for testing larger age values." },
+        { name: "Arun Demo", mobile: "+91 00000 00010", age: 35, disease: "Gestational diabetes", analysisNote: "Example profile for testing report row counts." },
+    ];
     let patients = [];
+    let patientStorageAvailable = true;
 
     const setPatientStatus = (message) => {
         patientStatus.textContent = message;
@@ -278,11 +291,13 @@ if (patientForm && hasDashboardSession) {
         const fields = [
             ["Patient name", "name"],
             ["WhatsApp mobile number", "mobile"],
+            ["Age", "age"],
             ["Disease type", "disease"],
+            ["Analysis note", "analysisNote"],
         ];
         const rows = [
             fields.map(([label]) => label),
-            ...patients.map((patient) => fields.map(([, key]) => patient[key])),
+            ...patients.map((patient) => fields.map(([, key]) => patient[key] ?? "")),
         ];
         const csv = rows
             .map((row) => row.map((value) => {
@@ -319,13 +334,26 @@ if (patientForm && hasDashboardSession) {
             const details = document.createElement("div");
             details.className = "patient-details";
             const name = document.createElement("h3");
-            name.textContent = patient.name;
+            name.textContent = patient.isSample ? `${patient.name} (Fictional)` : patient.name;
             const mobile = document.createElement("p");
-            mobile.textContent = patient.mobile;
+            mobile.textContent = patient.isSample
+                ? `Placeholder phone: ${patient.mobile}`
+                : patient.mobile;
+            details.append(name, mobile);
+            if (patient.isSample && Number.isInteger(patient.age)) {
+                const age = document.createElement("p");
+                age.textContent = `Age: ${patient.age} · Fictional analysis example`;
+                details.append(age);
+            }
             const disease = document.createElement("span");
             disease.className = "patient-disease";
             disease.textContent = patient.disease;
-            details.append(name, mobile, disease);
+            details.append(disease);
+            if (patient.isSample && typeof patient.analysisNote === "string") {
+                const analysisNote = document.createElement("p");
+                analysisNote.textContent = patient.analysisNote;
+                details.append(analysisNote);
+            }
 
             const action = document.createElement("div");
             action.className = "whatsapp-action";
@@ -366,11 +394,37 @@ if (patientForm && hasDashboardSession) {
             )) {
                 throw new Error("Saved patient records have an invalid format.");
             }
-            patients = parsedPatients;
+            patients = parsedPatients.map((patient) => {
+                const sampleIndex = patient.isSample === true
+                    ? samplePatients.findIndex((sample) => patient.mobile === sample.mobile)
+                    : -1;
+                return sampleIndex === -1
+                    ? patient
+                    : { ...samplePatients[sampleIndex], whatsappConsent: false, isSample: true };
+            });
         }
     } catch (error) {
         console.error("Could not load patient records.", error);
+        patientStorageAvailable = false;
         setPatientStatus("Could not load saved records from this browser. You can still add records for this visit.");
+    }
+
+    const savedSampleNumbers = new Set(
+        patients.filter((patient) => patient.isSample === true).map((patient) => patient.mobile)
+    );
+    const missingSamplePatients = samplePatients
+        .filter((patient) => !savedSampleNumbers.has(patient.mobile))
+        .map((patient) => ({ ...patient, whatsappConsent: false, isSample: true }));
+    if (missingSamplePatients.length > 0) {
+        patients.push(...missingSamplePatients);
+        if (patientStorageAvailable) {
+            try {
+                localStorage.setItem(patientStorageKey, JSON.stringify(patients));
+            } catch (error) {
+                console.error("Could not save fictional sample patient records.", error);
+                setPatientStatus("Sample profiles are shown for this visit but could not be saved in browser storage.");
+            }
+        }
     }
 
     renderPatients();
@@ -400,13 +454,12 @@ if (patientForm && hasDashboardSession) {
         } catch (error) {
             console.error("Could not save patient records.", error);
             patients.pop();
-            setPatientStatus("Could not save this patient in browser storage, so no report was generated. Please try again.");
+            setPatientStatus("Could not save this patient in browser storage. Please try again.");
             return;
         }
 
         renderPatients();
         patientForm.reset();
-        downloadPatientReport();
-        setPatientStatus("Patient added. A refreshed Excel-compatible report with all patients has been downloaded.");
+        setPatientStatus("Patient added successfully.");
     });
 }
